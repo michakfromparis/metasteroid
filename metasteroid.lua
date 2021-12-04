@@ -3,7 +3,36 @@ Config = {
     Items = {"gaetan.lunar_lander2", "gaetan.rocket_exhaust", "gaetan.landing_pad_green", "gaetan.landing_pad_blue",
              "gaetan.single_cube_grey"}
 }
-Config.ConstantAcceleration = {0, 0, 0}
+
+-- ******************************* SETTINGS ***********************************
+
+settings = {
+    debug = {
+        logEnabled = true,
+        controls = true,
+        showColliders = false
+    },
+    camera = {
+        altitude = 5,
+        minSpeed = 60.0,
+        lock = false
+    },
+    player = {
+        hidden = true,
+        physics = false
+    },
+    multi = {
+        maxPlayers = 16
+    },
+    map = {
+        timeCycle = false,
+        gravity = 0
+    },
+    score = {
+        glow = 10,
+        scaleFactor = 0.01
+    }
+}
 
 -- ******************************* STATE **************************************
 
@@ -83,7 +112,9 @@ Client.OnStart = function()
     s = {}
     s.init = function()
         s.bestScore = 0
+        Config.ConstantAcceleration = {settings.map.gravity, settings.map.gravity, settings.map.gravity}
     end
+
     s.reset = function()
         s.gameRunning = false
         s.engineOn = false
@@ -228,9 +259,9 @@ crash = function()
         c.CollidesWithMask = 0 -- TODO: replace this
         c.Position = ship.Position
         c.Physics = true
-        c.Velocity.Y = (math.random() - 0.5) * 2500
-        c.Velocity.X = (math.random() - 0.5) * 2500
-        c.Velocity.Z = (math.random() - 0.5) * 2500
+        c.Velocity.Y = (math.random() - 0.5) * 5000
+        c.Velocity.X = (math.random() - 0.5) * 5000
+        c.Velocity.Z = (math.random() - 0.5) * 5000
     end
 end
 
@@ -341,3 +372,58 @@ end
 Server.Tick = function(dt)
 
 end
+
+-- ***************************************** UTILS ****************************
+
+function dump(obj)
+    log("[" .. tostring(obj) .. "]")
+    for key, value in pairs(obj) do
+        log("  " .. key .. ": ", value)
+    end
+end
+
+function log(...)
+    if settings.debug.logEnabled then
+        print(...)
+    end
+end
+
+function logError(...)
+    log("Error: ", ...)
+end
+
+function arrayConcat(...)
+    local t = {}
+    for n = 1, select("#", ...) do
+        local arg = select(n, ...)
+        if type(arg) == "table" then
+            for _, v in ipairs(arg) do
+                t[#t + 1] = v
+            end
+        else
+            t[#t + 1] = arg
+        end
+    end
+    return t
+end
+
+switch = function(param, case_table)
+    local case = case_table[param]
+    if case then
+        return case()
+    end
+    local def = case_table['default']
+    return def and def() or nil
+end
+
+-- ******************************** 3D TOOLS **********************************
+
+function randomPosition()
+    return Number3(math.random(0, Map.Width), Map.Height + settings.camera.altitude, math.random(0, Map.Depth)) *
+               Map.Scale
+end
+
+function mapCenter()
+    return Number3(Map.Width * 0.5, Map.Height + 10, Map.Depth * 0.5) * Map.Scale
+end
+
