@@ -13,9 +13,10 @@ settings = {
         showColliders = false
     },
     camera = {
-        altitude = 5,
-        minSpeed = 60.0,
         lock = false
+    },
+    fx = {
+        particlesCcount = 500
     },
     player = {
         hidden = true,
@@ -110,8 +111,12 @@ Client.OnStart = function()
 
     -- create & init game state
     s = {}
+    s.particules = {}
     s.init = function()
         s.bestScore = 0
+        for i = 1, settings.fx.particlesCcount do
+            table.insert(s.particules, Shape(Items.gaetan.single_cube_grey))
+        end
         Config.ConstantAcceleration = {settings.map.gravity, settings.map.gravity, settings.map.gravity}
     end
 
@@ -132,10 +137,6 @@ Client.OnStart = function()
         end
         s.fuelLabel.Text = "fuel: " .. math.floor(s.fuel)
         s.scoreLabel.Text = ""
-        s.particules = {} -- array of particules used for explosions
-        for i = 1, 500 do
-            table.insert(s.particules, Shape(Items.gaetan.single_cube_grey))
-        end
         startPad.LocalPosition = Number3(4, 5.5, 4)
         endPad.LocalPosition = Number3(81, 5.5, 4)
         ship.IsHidden = false
