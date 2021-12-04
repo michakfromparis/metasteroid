@@ -222,7 +222,7 @@ Client.Tick = function(dt)
     if s.engineOn and s.fuel > 0 then
         -- show engine exhaust plume
         exhaust.IsHidden = false
-        ship.Velocity = ship.Velocity + (ship.Up * const.enginePower * dt)
+        ship.Velocity = ship.Velocity + (ship.Down * const.enginePower * dt)
         s.fuel = s.fuel - (dt * 10)
         if s.fuel < 0 then
             s.fuel = 0
