@@ -5,10 +5,18 @@ Config = {
 }
 Config.ConstantAcceleration = {0, 0, 0}
 
--- IDEAS
--- animate engine plume (scale/rotation)
--- put Player avatar in rocket
--- left/right modify the rotation speed (rotation acceleration), instead of setting its value
+-- ******************************* STATE **************************************
+
+state = {
+    coll = {
+        hitBlockCoords = nil,
+        hitBlockFace = nil
+    },
+    player = {
+        yaw = 0,
+        pitch = 0
+    }
+}
 
 Client.OnStart = function()
 
