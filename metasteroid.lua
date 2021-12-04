@@ -102,7 +102,7 @@ Client.OnStart = function()
         s.fuelLabel.Text = "fuel: " .. math.floor(s.fuel)
         s.scoreLabel.Text = ""
         s.particules = {} -- array of particules used for explosions
-        for i = 1, 50 do
+        for i = 1, 500 do
             table.insert(s.particules, Shape(Items.gaetan.single_cube_grey))
         end
         startPad.LocalPosition = Number3(4, 5.5, 4)
