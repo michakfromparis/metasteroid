@@ -150,6 +150,7 @@ Client.OnStart = function()
         ship.Physics = true
         ship.Position = const.spawnPosition
         ship.Rotation = const.spawnRotation
+        ship.Velocity = {0, 0, 0}
     end
     s.endGame = function(state, success)
         s.gameRunning = false
