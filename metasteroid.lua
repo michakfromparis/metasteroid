@@ -246,6 +246,9 @@ Client.DirectionalPad = function(x, y)
 end
 
 function shoot(direction)
+    if s.gameRunning == false then
+        return
+    end
     local particle = s.getParticle()
     particle.Position = ship.Position
     particle.Velocity = (ship.Up * const.enginePower * 100)
