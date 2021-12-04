@@ -228,9 +228,9 @@ crash = function()
         c.CollidesWithMask = 0 -- TODO: replace this
         c.Position = ship.Position
         c.Physics = true
-        c.Velocity.Y = (math.random() - 0.5) * 150
-        c.Velocity.X = (math.random() - 0.5) * 150
-        c.Velocity.Z = (math.random() - 0.5) * 150
+        c.Velocity.Y = (math.random() - 0.5) * 2500
+        c.Velocity.X = (math.random() - 0.5) * 2500
+        c.Velocity.Z = (math.random() - 0.5) * 2500
     end
 end
 
