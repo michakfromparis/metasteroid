@@ -16,7 +16,7 @@ settings = {
         lock = false
     },
     fx = {
-        particlesCcount = 500
+        particlesCcount = 1000
     },
     player = {
         hidden = true,
@@ -167,13 +167,21 @@ Client.OnStart = function()
         end
         Pointer:Show()
     end
+    s.particleIndex = 1
+    s.getParticle = function()
+        if s.particleIndex > #s.particles then
+            s.particleIndex = 1
+        end
+        s.particleIndex = s.particleIndex + 1
+        return s.particles[s.particleIndex]
+    end
     s:init()
     s:reset()
 
     bestPlayerScore = UI.Label("My best: 0")
     bestWorldScore = UI.Label("World best: 0")
 
-    retryButton = UI.Button("Retry!", Anchor.HLeft)
+    retryButton = UI.Button("Retry!", Anchor.Left)
     retryButton.OnRelease = function()
         Pointer:Hide()
         s:reset()
@@ -231,12 +239,19 @@ Client.DirectionalPad = function(x, y)
     s.rotation = x
 end
 
+function shoot(direction)
+    local particle = s.getParticle()
+    particle.Position = ship.Position
+    -- particle.Velocity = (ship.Up * const.enginePower * 100)
+    -- dump(particle)
+end
 -- jump function, triggered with Action1
 Client.Action1 = function()
     if s.gameRunning == false then
         s.gameRunning = true
     end
 
+    shoot(nil)
     if s.gameRunning == true then
         -- engine ON
         s.engineOn = true
