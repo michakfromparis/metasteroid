@@ -186,6 +186,14 @@ Client.Tick = function(dt)
     end
 end
 
+Pointer.Drag = function(e)
+    print('drag', e)
+    state.player.yaw = state.player.yaw + e.DX * 0.01
+    state.player.pitch = state.player.pitch - e.DY * 0.01
+    -- Player.Rotation = {state.player.pitch, state.player.yaw, 0}
+    ship.Rotation = {0, 0, state.player.yaw}
+end
+
 Client.DirectionalPad = function(x, y)
     -- x : left/right (-1 / 1)
     s.rotation = x
