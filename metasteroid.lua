@@ -111,11 +111,11 @@ Client.OnStart = function()
 
     -- create & init game state
     s = {}
-    s.particules = {}
+    s.particles = {}
     s.init = function()
         s.bestScore = 0
         for i = 1, settings.fx.particlesCcount do
-            table.insert(s.particules, Shape(Items.gaetan.single_cube_grey))
+            table.insert(s.particles, Shape(Items.gaetan.single_cube_grey))
         end
         Config.ConstantAcceleration = {settings.map.gravity, settings.map.gravity, settings.map.gravity}
     end
@@ -173,7 +173,7 @@ Client.OnStart = function()
     bestPlayerScore = UI.Label("My best: 0")
     bestWorldScore = UI.Label("World best: 0")
 
-    retryButton = UI.Button("Retry!")
+    retryButton = UI.Button("Retry!", Anchor.HLeft)
     retryButton.OnRelease = function()
         Pointer:Hide()
         s:reset()
@@ -253,7 +253,7 @@ crash = function()
     ship.IsHidden = true
     ship.Physics = false
     s.fuel = 0
-    for i, c in ipairs(s.particules) do
+    for i, c in ipairs(s.particles) do
         World:AddChild(c)
         c.Scale = 5
         c.CollisionGroupsMask = 0 -- TODO: replace this
