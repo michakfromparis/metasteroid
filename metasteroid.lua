@@ -115,7 +115,14 @@ Client.OnStart = function()
     s.init = function()
         s.bestScore = 0
         for i = 1, settings.fx.particlesCcount do
-            table.insert(s.particles, Shape(Items.gaetan.single_cube_grey))
+            local particle = Shape(Items.gaetan.single_cube_grey)
+            particle.Scale = 5
+            particle.CollisionGroupsMask = 0 -- TODO: replace this
+            particle.CollidesWithMask = 0 -- TODO: replace this
+            particle.Physics = true
+            particle.IsHidden = true
+            World:AddChild(particle)
+            table.insert(s.particles, particle)
         end
         Config.ConstantAcceleration = {settings.map.gravity, settings.map.gravity, settings.map.gravity}
     end
@@ -169,11 +176,10 @@ Client.OnStart = function()
     end
     s.particleIndex = 1
     s.getParticle = function()
-        if s.particleIndex > #s.particles then
-            s.particleIndex = 1
-        end
-        s.particleIndex = s.particleIndex + 1
-        return s.particles[s.particleIndex]
+        s.particleIndex = (s.particleIndex + 1) % #s.particles
+        local particle = s.particles[s.particleIndex]
+        particle.IsHidden = false
+        return particle
     end
     s:init()
     s:reset()
@@ -242,10 +248,10 @@ end
 function shoot(direction)
     local particle = s.getParticle()
     particle.Position = ship.Position
-    -- particle.Velocity = (ship.Up * const.enginePower * 100)
+    particle.Velocity = (ship.Up * const.enginePower * 100)
     -- dump(particle)
 end
--- jump function, triggered with Action1
+
 Client.Action1 = function()
     if s.gameRunning == false then
         s.gameRunning = true
@@ -271,6 +277,7 @@ crash = function()
     for i, c in ipairs(s.particles) do
         World:AddChild(c)
         c.Scale = 5
+        c.IsHidden = false
         c.CollisionGroupsMask = 0 -- TODO: replace this
         c.CollidesWithMask = 0 -- TODO: replace this
         c.Position = ship.Position
