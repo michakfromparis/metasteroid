@@ -175,9 +175,9 @@ Client.OnStart = function()
         end
         Pointer:Show()
     end
-    s.particleIndex = 1
+    s.particleIndex = 0
     s.getParticle = function()
-        s.particleIndex = (s.particleIndex + 1) % #s.particles
+        s.particleIndex = s.particleIndex % #s.particles + 1
         local particle = s.particles[s.particleIndex]
         particle.IsHidden = false
         return particle
