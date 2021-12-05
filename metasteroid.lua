@@ -222,7 +222,7 @@ Client.Tick = function(dt)
     if s.engineOn and s.fuel > 0 then
         -- show engine exhaust plume
         exhaust.IsHidden = false
-        ship.Velocity = ship.Velocity + (ship.Down * const.enginePower * dt)
+        ship.Velocity = ship.Velocity + (ship.Up * const.enginePower * dt)
         s.fuel = s.fuel - (dt * 10)
         if s.fuel < 0 then
             s.fuel = 0
@@ -252,7 +252,7 @@ function shoot(direction)
     if s.gameRunning == true then
         local particle = s.getParticle()
         particle.Position = ship.Position
-        particle.Velocity = (ship.Up * const.enginePower * 100)
+        particle.Velocity = (ship.Down * const.enginePower * 100)
     end
 end
 
