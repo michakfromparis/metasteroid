@@ -1,5 +1,5 @@
 Config = {
-    Map = "gaetan.lunar_lander_map",
+    Map = "michak.rectangle",
     Items = {"gaetan.lunar_lander2", "gaetan.rocket_exhaust", "gaetan.landing_pad_green", "gaetan.landing_pad_blue",
              "gaetan.single_cube_grey"}
 }
@@ -247,6 +247,8 @@ Client.DirectionalPad = function(x, y)
 end
 
 function shoot(direction)
+    log(s.gameRunning)
+    dump(s)
     if s.gameRunning == true then
         local particle = s.getParticle()
         particle.Position = ship.Position
