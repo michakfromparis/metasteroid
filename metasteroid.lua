@@ -114,17 +114,23 @@ Client.OnStart = function()
     s = {}
     s.particles = {}
     s.asteroids = {}
+    s.starfield = function()
+        log("generating starfield")
+        for i = 1, #s.particles do
+            local particle = s.particles[i]
+            particle.Scale = math.random(0, 5)
+            particle.Position = randomPosition()
+            particle.Position.Z = math.random(0, 500)
+            particle.IsHidden = false
+        end
+    end
     s.init = function()
         s.bestScore = 0
         for i = 1, settings.fx.particlesCcount do
             local particle = Shape(Items.gaetan.single_cube_grey)
-            particle.Scale = 5
             particle.CollisionGroupsMask = 0 -- TODO: replace this
             particle.CollidesWithMask = 0 -- TODO: replace this
             particle.Physics = true
-            particle.Position = randomPosition()
-            -- particle.Position = {math.random(0, Map.Width), math.random(0, Map.Height), math.random(0, Map.Width)}
-            -- particle.IsHidden = true
             World:AddChild(particle)
             table.insert(s.particles, particle)
         end
@@ -142,6 +148,7 @@ Client.OnStart = function()
     end
 
     s.reset = function()
+        s.starfield()
         s.gameRunning = false
         s.engineOn = false
         s.rotation = 0
@@ -193,6 +200,7 @@ Client.OnStart = function()
     s.getParticle = function()
         s.particleIndex = s.particleIndex % #s.particles + 1
         local particle = s.particles[s.particleIndex]
+        particle.Scale = 5
         particle.IsHidden = false
         return particle
     end
