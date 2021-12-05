@@ -52,7 +52,7 @@ Client.OnStart = function()
 
     -- Constant values for the game
     const = {
-        spawnPosition = Number3(20, 60, 20),
+        spawnPosition = Number3(120, 160, 20),
         spawnRotation = Number3(0, 0, 0),
         enginePower = 100,
         rotationSpeed = 100,
