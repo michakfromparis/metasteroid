@@ -1,7 +1,7 @@
 Config = {
-    Map = "michak.rectangle",
-    Items = {"gaetan.lunar_lander2", "gaetan.rocket_exhaust", "gaetan.landing_pad_green", "gaetan.landing_pad_blue",
-             "gaetan.single_cube_grey"}
+    Map = "michak.ma_borders",
+    Items = {"michak.ma_asteroid_large", "gaetan.lunar_lander2", "gaetan.rocket_exhaust", "gaetan.landing_pad_green",
+             "gaetan.landing_pad_blue", "gaetan.single_cube_grey"}
 }
 
 -- ******************************* SETTINGS ***********************************
@@ -26,6 +26,7 @@ settings = {
         maxPlayers = 16
     },
     map = {
+        asteroidsCount = 10,
         timeCycle = false,
         gravity = 0
     },
@@ -112,6 +113,7 @@ Client.OnStart = function()
     -- create & init game state
     s = {}
     s.particles = {}
+    s.asteroids = {}
     s.init = function()
         s.bestScore = 0
         for i = 1, settings.fx.particlesCcount do
@@ -120,9 +122,21 @@ Client.OnStart = function()
             particle.CollisionGroupsMask = 0 -- TODO: replace this
             particle.CollidesWithMask = 0 -- TODO: replace this
             particle.Physics = true
-            particle.IsHidden = true
+            particle.Position = randomPosition()
+            -- particle.Position = {math.random(0, Map.Width), math.random(0, Map.Height), math.random(0, Map.Width)}
+            -- particle.IsHidden = true
             World:AddChild(particle)
             table.insert(s.particles, particle)
+        end
+        for i = 1, settings.map.asteroidsCount do
+            local asteroid = Shape(Items.michak.ma_asteroid_large)
+            asteroid.Scale = 5
+            asteroid.CollisionGroupsMask = 3
+            asteroid.CollidesWithMask = 1
+            asteroid.Physics = true
+            asteroid.IsHidden = true
+            World:AddChild(asteroid)
+            table.insert(s.asteroids, asteroid)
         end
         Config.ConstantAcceleration = {settings.map.gravity, settings.map.gravity, settings.map.gravity}
     end
@@ -446,7 +460,7 @@ end
 -- ******************************** 3D TOOLS **********************************
 
 function randomPosition()
-    return Number3(math.random(0, Map.Width), Map.Height, math.random(0, Map.Depth)) * Map.Scale
+    return Number3(math.random(0, Map.Width), math.random(0, Map.Height), math.random(0, Map.Depth)) * Map.Scale
 end
 
 function mapCenter()
