@@ -15,8 +15,18 @@ settings = {
     camera = {
         lock = false
     },
+    coll = {
+        map = 1,
+        ship = 2,
+        borders = 3,
+        bullets = 4,
+        asteroids = 5
+    },
+
     fx = {
-        particlesCcount = 1000
+        particlesDepth = 500,
+        particlesCcount = 1000,
+        starfieldSpeed = 3
     },
     player = {
         hidden = true,
@@ -118,10 +128,12 @@ Client.OnStart = function()
         log("generating starfield")
         for i = 1, #s.particles do
             local particle = s.particles[i]
-            particle.Scale = math.random(0, 5)
+            particle.Scale = math.random(0, 1)
             particle.Position = randomPosition()
-            particle.Position.Z = math.random(0, 500)
+            particle.Position.Z = math.random(0, settings.fx.particlesDepth)
+            particle.Velocity = {0, 0, 0}
             particle.IsHidden = false
+            particle.speed = math.random(0, settings.fx.starfieldSpeed)
         end
     end
     s.init = function()
@@ -140,7 +152,10 @@ Client.OnStart = function()
             asteroid.CollisionGroupsMask = 3
             asteroid.CollidesWithMask = 1
             asteroid.Physics = true
-            asteroid.IsHidden = true
+            asteroid.Position = randomPosition()
+            asteroid.Position.Z = 0
+            -- asteroid.IsHidden = true
+            asteroid.Velocity = {math.random(0, 200), math.random(0, 200), 0}
             World:AddChild(asteroid)
             table.insert(s.asteroids, asteroid)
         end
@@ -231,6 +246,20 @@ Client.Tick = function(dt)
     end
     s.timeLabel.Text = (math.floor(s.time * 1000) / 1000) .. " s"
 
+    if s.gameRunning then
+        for i = 1, #s.particles do
+            local particle = s.particles[i]
+            if particle.Position.Z < 0 then
+                particle.Position = randomPosition()
+                particle.Position.Z = settings.fx.particlesDepth
+                particle.Velocity = {0, 0, 0}
+                particle.speed = math.random(0, settings.fx.starfieldSpeed) + settings.fx.starfieldSpeed
+            else
+                particle.Position.Z = particle.Position.Z - particle.speed
+            end
+        end
+    end
+
     if ship.IsHidden == false then
         Camera:SetModeSatellite(ship.Position, 300)
         Pointer:Show()
@@ -256,7 +285,6 @@ Client.Tick = function(dt)
 end
 
 Pointer.Drag = function(e)
-    print('drag', e)
     state.player.yaw = state.player.yaw + e.DX * 0.01
     state.player.pitch = state.player.pitch - e.DY * 0.01
     -- Player.Rotation = {state.player.pitch, state.player.yaw, 0}
@@ -270,7 +298,6 @@ end
 
 function shoot(direction)
     log(s.gameRunning)
-    dump(s)
     if s.gameRunning == true then
         local particle = s.getParticle()
         particle.Position = ship.Position
