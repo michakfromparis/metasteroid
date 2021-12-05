@@ -446,8 +446,7 @@ end
 -- ******************************** 3D TOOLS **********************************
 
 function randomPosition()
-    return Number3(math.random(0, Map.Width), Map.Height + settings.camera.altitude, math.random(0, Map.Depth)) *
-               Map.Scale
+    return Number3(math.random(0, Map.Width), Map.Height, math.random(0, Map.Depth)) * Map.Scale
 end
 
 function mapCenter()
